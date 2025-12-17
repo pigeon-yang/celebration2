@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宋女士你好 - 专属回忆录</title>
+    
+    <!-- 微信分享优化 -->
+    <meta property="og:title" content="宋女士你好 - 专属回忆录">
+    <meta property="og:description" content="记录美好时光，珍藏每一刻回忆">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="website">
+    <meta name="description" content="宋女士的专属回忆录，记录美好时光">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1 class="app-title">宋女士你好</h1>
+            <p class="app-subtitle">记录美好时光</p>
+            <div class="music-controls">
+                <button class="music-toggle-btn" id="musicToggleBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18V5l12-2v13"/>
+                        <path d="m9 9 12-2"/>
+                        <circle cx="6" cy="18" r="3"/>
+                        <path d="M18 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    </svg>
+                </button>
+                <audio id="backgroundMusic" loop preload="auto" volume="0.3">
+                    <source src="下载.mp4" type="video/mp4">
+                    您的浏览器不支持音频播放
+                 </audio>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="timeline-section">
+                <div class="timeline-container">
+                    <div class="timeline-line"></div>
+                    <div class="timeline-nodes" id="timelineNodes">
+                        <!-- 时间线节点将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </section>
+
+            <section class="add-memory-section">
+            <button class="add-memory-btn" id="addMemoryBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                添加回忆
+            </button>
+            
+            <button class="share-btn" id="shareBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/>
+                </svg>
+                分享给好友
+            </button>
+        </section>
+        </main>
+
+        <!-- 添加回忆模态框 -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">添加美好回忆</h3>
+                    <button class="close-btn" id="closeModal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <form class="memory-form" id="memoryForm">
+                    <div class="form-group">
+                        <label for="memoryDate">日期</label>
+                        <input type="date" id="memoryDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="memoryDesc">回忆描述</label>
+                        <textarea id="memoryDesc" placeholder="写下这段美好时光的回忆..." maxlength="100"></textarea>
+                        <span class="char-count">0/100</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="memoryMedia">照片和视频</label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <svg class="upload-area-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <p>点击或拖拽照片和视频到这里</p>
+                            <input type="file" id="memoryMedia" multiple accept="image/*,video/*" style="display: none;">
+                        </div>
+                        <div class="preview-container" id="previewContainer"></div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" id="cancelBtn">取消</button>
+                        <button type="submit" class="save-btn" id="saveMemoryBtn">保存回忆</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 媒体展示模态框 -->
+        <div class="media-modal" id="mediaModal">
+            <div class="modal-content">
+                <button class="close-btn" id="closeMediaModal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+                <div class="media-info">
+                    <h3 class="media-date" id="mediaDate"></h3>
+                    <p class="media-desc" id="mediaDesc"></p>
+                </div>
+                <div class="media-slider" id="mediaSlider">
+                    <!-- 媒体内容将通过JavaScript动态添加 -->
+                </div>
+                <div class="slider-controls">
+                    <button class="prev-btn" id="prevBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 18l-6-6 6-6"/>
+                        </svg>
+                    </button>
+                    <span class="slide-counter" id="slideCounter">1/1</span>
+                    <button class="next-btn" id="nextBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分享时间线回忆应用</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #fff8f0 0%, #fff0e6 50%, #fff8f0 100%);
+            min-height: 100vh;
+            color: #5a3825;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            color: #e67e22;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #e67e22;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .step {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        
+        .step-number {
+            background: #e67e22;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .btn {
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background: #d35400;
+        }
+        
+        .qr-code {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .step {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">📱</div>
+        <h1>分享时间线回忆应用</h1>
+        
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>方法一：本地网络分享</strong>
+            <p style="margin-top: 10px;">在同一个WiFi网络下，将以下链接分享给好友：</p>
+            <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0; word-break: break-all;">
+                http://您的IP地址:8000
+            </div>
+            <p>在命令提示符输入 <code>ipconfig</code> 查看您的IP地址</p>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>方法二：使用内网穿透</strong>
+            <p style="margin-top: 10px;">推荐使用 ngrok 或 localtunnel 生成公共链接：</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>安装 ngrok: <code>ngrok http 8000</code></li>
+                <li>安装 localtunnel: <code>lt --port 8000</code></li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>方法三：部署到云平台</strong>
+            <p style="margin-top: 10px;">长期使用建议部署到：</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>Vercel（免费）</li>
+                <li>Netlify（免费）</li>
+                <li>GitHub Pages（免费）</li>
+            </ul>
+        </div>
+        
+        <div style="margin-top: 30px;">
+            <a href="index.html" class="btn">进入应用</a>
+            <button onclick="copyLink()" class="btn">复制当前链接</button>
+        </div>
+        
+        <div class="qr-code">
+            <h3>📱 手机扫码访问</h3>
+            <p>使用微信"扫一扫"功能扫描二维码</p>
+            <div id="qrcode" style="margin: 20px 0; text-align: center;">
+                <canvas id="qrCanvas" width="200" height="200" style="border: 1px solid #ddd; border-radius: 10px;"></canvas>
+                <div style="margin-top: 10px;">
+                    <button onclick="generateQRCode()" class="btn" style="padding: 8px 15px; font-size: 0.9rem;">生成二维码</button>
+                    <button onclick="downloadQRCode()" class="btn" style="padding: 8px 15px; font-size: 0.9rem;">下载二维码</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取当前应用链接
+        function getAppUrl() {
+            return window.location.href.replace('share.html', 'index.html');
+        }
+        
+        function copyLink() {
+            const currentUrl = getAppUrl();
+            navigator.clipboard.writeText(currentUrl).then(function() {
+                alert('链接已复制到剪贴板！');
+            }, function() {
+                // 备用方案
+                const textArea = document.createElement('textarea');
+                textArea.value = currentUrl;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('链接已复制到剪贴板！');
+            });
+        }
+        
+        // 二维码生成函数
+        function generateQRCode() {
+            const canvas = document.getElementById('qrCanvas');
+            const ctx = canvas.getContext('2d');
+            const url = getAppUrl();
+            
+            // 清空画布
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 设置二维码参数
+            const size = 8; // 每个模块的大小
+            const margin = 25; // 边距
+            const qrSize = 21; // 二维码尺寸（21x21模块）
+            
+            // 生成二维码数据
+            const qrData = generateQRData(url);
+            
+            // 绘制二维码
+            ctx.fillStyle = 'black';
+            for (let y = 0; y < qrSize; y++) {
+                for (let x = 0; x < qrSize; x++) {
+                    if (qrData[y * qrSize + x]) {
+                        ctx.fillRect(
+                            margin + x * size, 
+                            margin + y * size, 
+                            size, 
+                            size
+                        );
+                    }
+                }
+            }
+            
+            // 添加应用图标到中心
+            drawAppIcon(ctx, margin, size, qrSize);
+            
+            console.log('二维码已生成，链接:', url);
+        }
+        
+        // 生成二维码数据
+        function generateQRData(text) {
+            // 简单的二维码数据生成（模拟版本1二维码）
+            const data = new Array(21 * 21).fill(false);
+            
+            // 添加定位图案
+            addPositionPattern(data, 0, 0);
+            addPositionPattern(data, 0, 14);
+            addPositionPattern(data, 14, 0);
+            
+            // 添加时序图案
+            for (let i = 8; i < 13; i++) {
+                data[6 * 21 + i] = i % 2 === 0;
+                data[i * 21 + 6] = i % 2 === 0;
+            }
+            
+            // 添加数据（简单的文本编码）
+            const encodedText = encodeText(text);
+            let dataIndex = 0;
+            
+            for (let i = 0; i < encodedText.length && dataIndex < data.length; i++) {
+                const bit = encodedText[i];
+                // 跳过定位图案区域
+                let x = dataIndex % 21;
+                let y = Math.floor(dataIndex / 21);
+                
+                if (!isInPositionPattern(x, y)) {
+                    data[dataIndex] = bit;
+                }
+                dataIndex++;
+            }
+            
+            return data;
+        }
+        
+        // 添加定位图案
+        function addPositionPattern(data, startX, startY) {
+            for (let y = 0; y < 7; y++) {
+                for (let x = 0; x < 7; x++) {
+                    const index = (startY + y) * 21 + (startX + x);
+                    if (x === 0 || x === 6 || y === 0 || y === 6 || 
+                        (x >= 2 && x <= 4 && y >= 2 && y <= 4)) {
+                        data[index] = true;
+                    }
+                }
+            }
+        }
+        
+        // 检查是否在定位图案区域
+        function isInPositionPattern(x, y) {
+            return (x < 7 && y < 7) || 
+                   (x < 7 && y > 13) || 
+                   (x > 13 && y < 7);
+        }
+        
+        // 简单的文本编码
+        function encodeText(text) {
+            const bits = [];
+            // 添加模式指示器（字节模式）
+            bits.push(...[0,1,0,0]);
+            
+            // 添加字符计数指示器（8位）
+            const length = text.length;
+            for (let i = 7; i >= 0; i--) {
+                bits.push((length >> i) & 1);
+            }
+            
+            // 添加数据
+            for (let i = 0; i < text.length; i++) {
+                const charCode = text.charCodeAt(i);
+                for (let j = 7; j >= 0; j--) {
+                    bits.push((charCode >> j) & 1);
+                }
+            }
+            
+            return bits;
+        }
+        
+        // 绘制应用图标
+        function drawAppIcon(ctx, margin, size, qrSize) {
+            const center = Math.floor(qrSize / 2);
+            const iconSize = 5;
+            const startX = margin + (center - Math.floor(iconSize/2)) * size;
+            const startY = margin + (center - Math.floor(iconSize/2)) * size;
+            
+            ctx.fillStyle = 'white';
+            ctx.fillRect(startX, startY, iconSize * size, iconSize * size);
+            
+            ctx.fillStyle = '#e67e22';
+            ctx.beginPath();
+            ctx.arc(startX + iconSize * size / 2, startY + iconSize * size / 2, 
+                   iconSize * size / 3, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+        
+        // 下载二维码
+        function downloadQRCode() {
+            const canvas = document.getElementById('qrCanvas');
+            const link = document.createElement('a');
+            link.download = '时间线回忆应用二维码.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+        
+        // 页面加载时自动生成二维码
+        window.addEventListener('load', function() {
+            const currentUrl = getAppUrl();
+            console.log('当前应用地址:', currentUrl);
+            
+            // 延迟生成二维码，确保页面完全加载
+            setTimeout(() => {
+                generateQRCode();
+            }, 500);
+        });
+    </script>
+</body>
+</html>
